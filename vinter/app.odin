@@ -29,6 +29,15 @@ run :: proc(project_settings: ^ProjectSettings, hooks: ^RuntimeHooks) {
 	}
 }
 
+ProjectSettings :: struct {
+	window: WindowSettings,
+	logger: LoggerSettings,
+}
+
+LoggerSettings :: struct {
+	log_level: log.Level,
+}
+
 RuntimeHooks :: struct {
 	load:   proc(),
 	update: proc(),
