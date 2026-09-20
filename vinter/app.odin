@@ -20,6 +20,7 @@ run :: proc(project_settings: ^ProjectSettings, hooks: ^RuntimeHooks) {
 		event: sdl.Event
 		for sdl.PollEvent(&event) {
 			if event.type == .QUIT do app.is_running = false
+			window_handle_events(&event)
 		}
 
 		app.hooks.update()
@@ -36,6 +37,7 @@ RuntimeHooks :: struct {
 
 @(private = "package")
 App :: struct {
+	window:     Window,
 	hooks:      RuntimeHooks,
 	is_running: bool,
 }
@@ -48,12 +50,15 @@ init :: proc(project_settings: ^ProjectSettings, hooks: ^RuntimeHooks) {
 	log.infof("Launching %s", project_settings.window.title)
 
 	sdl_init()
+	app.window = window_create(&project_settings.window)
 	app.hooks = hooks^
 	app.is_running = true
 }
 
 @(private = "file")
 destroy :: proc() {
+	window_destroy()
+
 	log.info("Destroying SDL Context...")
 	sdl.Quit()
 	log.info("SDL Context destroyed.")
