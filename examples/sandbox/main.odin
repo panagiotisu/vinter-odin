@@ -9,6 +9,7 @@ main :: proc() {
 			initial_size = {1280, 720},
 			flags = {resizeable = true, mouse_captured = true},
 		},
+		renderer = {default_background_color = vn.DarkBlue},
 		logger = {log_level = .Debug},
 	}
 

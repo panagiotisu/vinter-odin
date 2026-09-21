@@ -49,6 +49,8 @@ Window :: struct {
 
 @(private = "package")
 window_create :: proc(settings: ^WindowSettings) -> Window {
+	settings.flags.hidden = true // Hide window until renderer finishes setup.
+
 	window := Window {
 		backend = sdl.CreateWindow(
 			strings.clone_to_cstring(settings.title),

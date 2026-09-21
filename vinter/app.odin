@@ -25,13 +25,16 @@ run :: proc(project_settings: ^ProjectSettings, hooks: ^RuntimeHooks) {
 
 		app.hooks.update()
 
+		renderer_begin_frame()
 		app.hooks.render()
+		renderer_end_frame()
 	}
 }
 
 ProjectSettings :: struct {
-	window: WindowSettings,
-	logger: LoggerSettings,
+	window:   WindowSettings,
+	renderer: RendererSettings,
+	logger:   LoggerSettings,
 }
 
 LoggerSettings :: struct {
@@ -47,6 +50,7 @@ RuntimeHooks :: struct {
 @(private = "package")
 App :: struct {
 	window:     Window,
+	renderer:   Renderer,
 	hooks:      RuntimeHooks,
 	is_running: bool,
 }
@@ -60,12 +64,14 @@ init :: proc(project_settings: ^ProjectSettings, hooks: ^RuntimeHooks) {
 
 	sdl_init()
 	app.window = window_create(&project_settings.window)
+	app.renderer = renderer_create(&project_settings.renderer)
 	app.hooks = hooks^
 	app.is_running = true
 }
 
 @(private = "file")
 destroy :: proc() {
+	renderer_destroy()
 	window_destroy()
 
 	log.info("Destroying SDL Context...")
