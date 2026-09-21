@@ -21,9 +21,11 @@ run :: proc(project_settings: ^ProjectSettings, hooks: ^RuntimeHooks) {
 		for sdl.PollEvent(&event) {
 			if event.type == .QUIT do app.is_running = false
 			window_handle_events(&event)
+			devices_handle_events(&event)
 		}
 
 		app.hooks.update()
+		devices_update()
 
 		renderer_begin_frame()
 		app.hooks.render()
@@ -51,6 +53,8 @@ RuntimeHooks :: struct {
 App :: struct {
 	window:     Window,
 	renderer:   Renderer,
+	devices:    Devices,
+	input:      InputMap,
 	hooks:      RuntimeHooks,
 	is_running: bool,
 }
@@ -65,6 +69,7 @@ init :: proc(project_settings: ^ProjectSettings, hooks: ^RuntimeHooks) {
 	sdl_init()
 	app.window = window_create(&project_settings.window)
 	app.renderer = renderer_create(&project_settings.renderer)
+	app.devices = devices_create()
 	app.hooks = hooks^
 	app.is_running = true
 }

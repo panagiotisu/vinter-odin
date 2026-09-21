@@ -27,6 +27,9 @@ sandbox_load :: proc() {
 }
 
 sandbox_update :: proc() {
+	if vn.mouse_is_button_just_pressed(.Middle) {
+		vn.renderer_set_clear_color(vn.Gold)
+	}
 
 }
 
