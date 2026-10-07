@@ -29,40 +29,49 @@ time_reset :: proc() {
 	ema_reset(&app.time.frame_time_filter)
 }
 
-time_delta :: proc() -> f32 {
+@(require_results)
+time_delta :: #force_inline proc() -> f32 {
 	return app.time.delta
 }
 
-time_unscaled_delta :: proc() -> f32 {
+@(require_results)
+time_unscaled_delta :: #force_inline proc() -> f32 {
 	return app.time.unscaled_delta
 }
 
-time_elapsed :: proc() -> f32 {
+@(require_results)
+time_elapsed :: #force_inline proc() -> f32 {
 	return app.time.elapsed
 }
 
-time_unscaled_elapsed :: proc() -> f32 {
+@(require_results)
+time_unscaled_elapsed :: #force_inline proc() -> f32 {
 	return app.time.unscaled_elapsed
 }
 
-time_wall :: proc() -> f32 {
+@(require_results)
+time_wall :: #force_inline proc() -> f32 {
 	return app.time.wall
 }
 
-time_scale :: proc() -> f32 {
+@(require_results)
+time_scale :: #force_inline proc() -> f32 {
 	return app.time.scale
 }
 
-time_is_paused :: proc() -> bool {
+@(require_results)
+time_is_paused :: #force_inline proc() -> bool {
 	return app.time.paused
 }
 
+@(require_results)
 time_fps :: proc() -> f32 {
 	avg_frame_time := ema_value(&app.time.frame_time_filter)
 	if avg_frame_time <= 0 do return 0
 	return 1.0 / avg_frame_time
 }
 
+@(require_results)
 time_instant_fps :: proc() -> f32 {
 	if app.time.unscaled_delta <= 0 do return 0
 	return 1.0 / app.time.unscaled_delta
@@ -98,6 +107,7 @@ Time :: struct {
 
 
 @(private = "package")
+@(require_results)
 time_create :: proc(settings: ^TimeSettings) -> Time {
 	return {
 		last = time.tick_now(),
