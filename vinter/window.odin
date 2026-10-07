@@ -19,6 +19,10 @@ window_height :: proc() -> u32 {
 	return app.window.size.y
 }
 
+window_set_title :: proc(title: string) {
+	sdl.SetWindowTitle(app.window.backend, strings.clone_to_cstring(title, context.temp_allocator))
+}
+
 WindowSettings :: struct {
 	title:        string,
 	initial_size: [2]u32,

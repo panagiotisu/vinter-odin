@@ -16,6 +16,7 @@ run :: proc(project_settings: ^ProjectSettings, hooks: ^RuntimeHooks) {
 	log.info("Assets loaded.")
 
 	log.info("Starting engine loop...")
+	time_reset()
 	for app.is_running {
 		event: sdl.Event
 		for sdl.PollEvent(&event) {
@@ -24,18 +25,22 @@ run :: proc(project_settings: ^ProjectSettings, hooks: ^RuntimeHooks) {
 			devices_handle_events(&event)
 		}
 
+		time_update()
 		app.hooks.update()
 		devices_update()
 
 		renderer_begin_frame()
 		app.hooks.render()
 		renderer_end_frame()
+
+		free_all(context.temp_allocator)
 	}
 }
 
 ProjectSettings :: struct {
 	window:   WindowSettings,
 	renderer: RendererSettings,
+	time:     TimeSettings,
 	logger:   LoggerSettings,
 }
 
@@ -55,6 +60,7 @@ App :: struct {
 	renderer:   Renderer,
 	devices:    Devices,
 	input:      InputMap,
+	time:       Time,
 	hooks:      RuntimeHooks,
 	is_running: bool,
 }
@@ -70,6 +76,7 @@ init :: proc(project_settings: ^ProjectSettings, hooks: ^RuntimeHooks) {
 	app.window = window_create(&project_settings.window)
 	app.renderer = renderer_create(&project_settings.renderer)
 	app.devices = devices_create()
+	app.time = time_create(&project_settings.time)
 	app.hooks = hooks^
 	app.is_running = true
 }
